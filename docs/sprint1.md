@@ -175,7 +175,6 @@ On your own, use mongoose CRUD methods to refactor the other `/api/books*` route
 
 Make sure you look back to the notes or the Mongoose documentation for info on important methods like:
 
-* `find`
+* `findById`
 * `findOneAndRemove`
-* `new`
-* `save`
+* `findOneAndUpdate`
