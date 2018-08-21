@@ -93,8 +93,9 @@ We don't need all of these today; in fact we're only really going to worry about
 
 
 
-  <details><summary>Spoiler</summary>
-
+  <details><summary>Spoiler</summary>  
+  
+  ```js
      // Create a character associated with a book
      app.post('/api/books/:book_id/characters', function (req, res) {
        // Get book id from url params (`req.params`)
@@ -119,7 +120,8 @@ We don't need all of these today; in fact we're only really going to worry about
          }
        );
      });
-
+   ```
+ 
   </details>
 
 
