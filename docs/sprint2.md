@@ -131,7 +131,7 @@ Referencing authors is a good choice here because:
 
   ```js
     
-      db.Author.remove({}, function(err, authors) {
+      db.Author.deleteMany({}, function(err, authors) {
         console.log('removed all authors');
         db.Author.create(authors_list, function(err, authors){
           if (err) {
@@ -142,7 +142,7 @@ Referencing authors is a good choice here because:
           console.log("created", authors.length, "authors");
 
 
-          db.Book.remove({}, function(err, books){
+          db.Book.deleteMany({}, function(err, books){
             console.log('removed all books');
             books_list.forEach(function (bookData) {
               var book = new db.Book({
