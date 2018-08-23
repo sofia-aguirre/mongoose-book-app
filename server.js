@@ -17,12 +17,9 @@ var app = express();
 // serve static files in public
 app.use(express.static('public'));
 
-/////testli
-
 
 // body parser config to accept our datatypes
 app.use(bodyParser.urlencoded({ extended: true }));
-
 
 
 ////////////////////
@@ -33,19 +30,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //hardcoded data has been deleted
 //in favor of using the database db.Books
 
-// var newBookUUID = 18;
-
-
-
-
-
-
 
 ////////////////////
 //  ROUTES
 ///////////////////
-
-
 
 
 // define a root route: localhost:3000/
@@ -55,15 +43,19 @@ app.get('/', function (req, res) {
 
 // get all books
 app.get('/api/books', function (req, res) {
-  // send all books as JSON response
-  db.Book.find(function (err, books) {
-    if (err) {
-      console.log("index error: " + err);
-      res.sendStatus(500);
-    }
-    res.json(books);
-  });
-});
+  // find all books {}
+  db.Book.find()
+    //before executing, populate all authors
+    .populate('author')
+    //now we can execute callback
+    .exec(function(err, books){
+      //if there's an error then print error
+      if (err) { 
+        console.log("index error: " + err); 
+      } //else on success send a JSON file for the books
+        res.json(books);
+        });
+    });
 
 // get one book
 //hint: check the books array json object in the browser to 
@@ -82,16 +74,36 @@ app.get('/api/books/:id', function (req, res) {
 
 // create new book
 app.post('/api/books', function (req, res) {
-  // create new book with form data (`req.body`)
-  var newBook = req.body;
-  //push to the database
-  db.Book.create(newBook, function (err, savedBook) {
-    if(err){
-      return res.status(400).json({err: "error has occured"})
-    } 
-    res.json(newBook);
-  })
-});
+  // creates a new book in the Book database
+  var newBook = new db.Book({
+    //gets book's info from the form data ('req.body')
+    title: req.body.title,
+    image: req.body.image,
+    releaseDate: req.body.releaseDate,
+  });
+  //check to see if the newBook's author is in the database
+  if (db.Book.find({name: req.body.author} == 
+      db.Author.find({name: req.body.author}))) {
+        newBook.author = author;
+        newBook.save( function (err, book) {
+          if(err){
+            return res.status(400).json({err: "error has occured"})
+          } res.json(newBook);
+      })}
+      else {//we want to add the author to the book and create it
+    db.Author.create({name: req.body.author}, function (err, author) {
+      //save the newBook's author to its property
+      newBook.author = author;
+      //now save the newBook that we've created into the db
+      newBook.save( function (err, book) {
+        if(err){
+          return res.status(400).json({err: "error has occured"})
+        } 
+    //on success, send the newBook to the localhost as a JSON object
+        res.json(newBook);
+      })
+    })}
+  });
 
 // update book using method findOneAndUpdate
 // app.put('/api/books/:id', function(req,res){

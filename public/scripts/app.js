@@ -35,11 +35,11 @@ $(document).ready(function(){
 
 });
 
-function getBookHtml(book) {
+function getBookHtml(book) { //added .name to book.author.name because the book's author property is an object, so we have to access that object's specific property (in this case, .name)
   return `<hr>
           <p>
             <b>${book.title}</b>
-            by ${book.author}
+            by ${book.author.name} 
             <button type="button" name="button" class="deleteBtn btn btn-danger pull-right" data-id=${book._id}>Delete</button>
           </p>`;
 }
